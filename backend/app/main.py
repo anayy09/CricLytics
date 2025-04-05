@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.endpoints import data
+from app.core.config import settings
+
 app = FastAPI(
     title="IPL 2025 Analytics API",
     description="Backend API for IPL 2025 Cricket Analytics Platform",
@@ -15,6 +18,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(data.router, prefix=f"{settings.API_PREFIX}/data", tags=["Data Management"])
 
 @app.get("/")
 async def root():
