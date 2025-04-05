@@ -1,0 +1,66 @@
+.team-roster {
+    &__sections {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    &__section-title {
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #edf2f7;
+      font-size: 1.1rem;
+    }
+    
+    &__players {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    
+    &__player {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem;
+      background-color: #f8fafc;
+      border-radius: 4px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background-color: #f1f5f9;
+      }
+    }
+    
+    &__player-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 0.75rem;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    
+    &__player-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    &__player-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    &__player-role {
+      font-size: 0.8rem;
+      color: #718096;
+    }
+  }

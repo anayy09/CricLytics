@@ -1,0 +1,196 @@
+.team-stats {
+    &__row {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+      }
+    }
+    
+    &__card {
+      flex: 1;
+      
+      &--full {
+        width: 100%;
+      }
+    }
+    
+    &__overall {
+      display: flex;
+      align-items: center;
+      
+      @media (max-width: 576px) {
+        flex-direction: column;
+      }
+    }
+    
+    &__chart {
+      flex: 1;
+    }
+    
+    &__summary {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    &__summary-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.75rem;
+      background-color: #f8fafc;
+      border-radius: 4px;
+    }
+    
+    &__summary-label {
+      font-size: 0.8rem;
+      color: #718096;
+      margin-bottom: 0.25rem;
+    }
+    
+    &__summary-value {
+      font-weight: 700;
+      font-size: 1.2rem;
+      
+      &--highlight {
+        color: $primary-color;
+      }
+      
+      &--positive {
+        color: #38a169;
+      }
+      
+      &--negative {
+        color: #e53e3e;
+      }
+    }
+    
+    &__performance {
+      display: flex;
+      gap: 1.5rem;
+      
+      @media (max-width: 576px) {
+        flex-direction: column;
+      }
+    }
+    
+    &__performance-section {
+      flex: 1;
+    }
+    
+    &__performance-title {
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #edf2f7;
+    }
+    
+    &__performance-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.75rem;
+      
+      @media (max-width: 576px) {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    &__performance-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.75rem;
+      background-color: #f8fafc;
+      border-radius: 4px;
+    }
+    
+    &__performance-label {
+      font-size: 0.8rem;
+      color: #718096;
+      margin-bottom: 0.25rem;
+    }
+    
+    &__performance-value {
+      font-weight: 700;
+    }
+    
+    &__venues {
+      width: 100%;
+      overflow-x: auto;
+    }
+    
+    &__top-performers {
+      display: flex;
+      gap: 2rem;
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+      }
+    }
+    
+    &__top-performers-section {
+      flex: 1;
+    }
+    
+    &__top-performers-title {
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #edf2f7;
+    }
+    
+    &__top-performers-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    &__top-performer {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem;
+      background-color: #f8fafc;
+      border-radius: 4px;
+      
+      @media (max-width: 576px) {
+        flex-wrap: wrap;
+      }
+    }
+    
+    &__top-performer-rank {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $primary-color;
+      color: white;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-right: 0.75rem;
+    }
+    
+    &__top-performer-name {
+      flex: 1;
+      font-weight: 600;
+      margin-right: 0.75rem;
+      
+      @media (max-width: 576px) {
+        width: calc(100% - 40px);
+        margin-bottom: 0.5rem;
+      }
+    }
+    
+    &__top-performer-stat {
+      margin-right: 1rem;
+      font-size: 0.9rem;
+      color: #4a5568;
+      
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
