@@ -1,4 +1,4 @@
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Union
 from sqlalchemy.orm import Session
 import pandas as pd
 import numpy as np
@@ -12,6 +12,40 @@ from app.utils.data_fetcher import (
     fetch_most_wickets,
     download_cricsheet_data
 )
+
+def safe_float(value: Any, default: float = 0.0) -> float:
+    """Safely convert value to float"""
+    if not value or value == '-':
+        return default
+    try:
+        return float(value)
+    except (ValueError, TypeError):
+        return default
+
+def safe_int(value: Any, default: int = 0) -> int:
+    """Safely convert value to int"""
+    if not value or value == '-':
+        return default
+    try:
+        return int(str(value).split('*')[0])  # Handle "50*" format
+    except (ValueError, TypeError):
+        return default
+
+def clean_player_code(code: str) -> str:
+    """Clean and standardize player code"""
+    if not code:
+        return ""
+    # Remove any potential duplicates in the code
+    parts = code.split('-')
+    if len(parts) > 1:
+        return f"{parts[0]}-{parts[-1]}"
+    return code
+
+def clean_match_code(match_id: Any) -> str:
+    """Clean and standardize match code"""
+    if not match_id:
+        return ""
+    return str(match_id).strip()
 
 async def process_team_data(db: Session) -> List[models.Team]:
     """
@@ -35,14 +69,12 @@ async def process_team_data(db: Session) -> List[models.Team]:
             # Create new team
             team = models.Team(
                 team_code=team_info["TeamCode"],
-                name=team_info["FullName"],
-                short_name=team_info["ShortName"],
+                name=team_info["TeamName"],
+                short_name=team_info["TeamCode"],
                 logo_url=team_info.get("TeamLogo", ""),
-                primary_color=team_info.get("PrimaryColor", "#000000"),
-                secondary_color=team_info.get("SecondaryColor", "#FFFFFF"),
                 matches_played=int(team_info.get("Matches", 0)),
-                matches_won=int(team_info.get("Won", 0)),
-                matches_lost=int(team_info.get("Lost", 0)),
+                matches_won=int(team_info.get("Wins", 0)),
+                matches_lost=int(team_info.get("Loss", 0)),
                 matches_tied=int(team_info.get("Tied", 0)),
                 net_run_rate=float(team_info.get("NetRunRate", 0.0)),
                 points=int(team_info.get("Points", 0))
@@ -51,8 +83,8 @@ async def process_team_data(db: Session) -> List[models.Team]:
         else:
             # Update existing team
             team.matches_played = int(team_info.get("Matches", 0))
-            team.matches_won = int(team_info.get("Won", 0))
-            team.matches_lost = int(team_info.get("Lost", 0))
+            team.matches_won = int(team_info.get("Wins", 0))
+            team.matches_lost = int(team_info.get("Loss", 0))
             team.matches_tied = int(team_info.get("Tied", 0))
             team.net_run_rate = float(team_info.get("NetRunRate", 0.0))
             team.points = int(team_info.get("Points", 0))
@@ -63,118 +95,124 @@ async def process_team_data(db: Session) -> List[models.Team]:
     return teams
 
 async def process_player_data(db: Session) -> List[models.Player]:
-    """
-    Process player data from the API and store in database
-    
-    Args:
-        db: Database session
-        
-    Returns:
-        List of player models
-    """
-    # Fetch batsmen data
+    """Process player data from the API and store in database"""
     batsmen_data = await fetch_top_run_scorers()
-    # Fetch bowlers data
     bowlers_data = await fetch_most_wickets()
-    
     players = []
+    processed_codes = set()  # Track processed player codes
     
     # Process batsmen
     for player_info in batsmen_data.get("Batsmen", []):
-        player = db.query(models.Player).filter(models.Player.player_code == player_info["PlayerID"]).first()
+        player_code = clean_player_code(player_info.get("StrikerID"))
+        if not player_code or player_code in processed_codes:
+            continue
+        
+        processed_codes.add(player_code)
+        player = db.query(models.Player).filter(
+            models.Player.player_code == player_code
+        ).first()
         
         if not player:
-            # Create new player
             player = models.Player(
-                player_code=player_info["PlayerID"],
-                name=player_info["Name"],
-                country=player_info.get("Country", ""),
-                role="Batsman",  # Default role, will be updated if they're also a bowler
-                image_url=player_info.get("PlayerImg", ""),
-                matches=int(player_info.get("Matches", 0)),
-                runs=int(player_info.get("Runs", 0)),
-                balls_faced=int(player_info.get("BallsFaced", 0)),
-                highest_score=int(player_info.get("HighestScore", 0)),
-                fifties=int(player_info.get("50s", 0)),
-                hundreds=int(player_info.get("100s", 0)),
-                fours=int(player_info.get("4s", 0)),
-                sixes=int(player_info.get("6s", 0)),
-                batting_average=float(player_info.get("Average", 0.0)),
-                strike_rate=float(player_info.get("StrikeRate", 0.0))
+                player_code=player_code,
+                name=player_info["StrikerName"],
+                role="Batsman",
+                matches=safe_int(player_info.get("Matches")),
+                runs=safe_int(player_info.get("TotalRuns")),
+                highest_score=safe_int(player_info.get("HighestScore")),
+                fifties=safe_int(player_info.get("FiftyPlusRuns")),
+                hundreds=safe_int(player_info.get("Centuries")),
+                fours=safe_int(player_info.get("Fours")),
+                sixes=safe_int(player_info.get("Sixes")),
+                batting_average=safe_float(player_info.get("BattingAverage")),
+                strike_rate=safe_float(player_info.get("StrikeRate"))
             )
             
             # Add player to team
-            team_code = player_info.get("TeamCode")
-            if team_code:
-                team = db.query(models.Team).filter(models.Team.team_code == team_code).first()
+            team_name = player_info.get("TeamName")
+            if team_name:
+                team = db.query(models.Team).filter(models.Team.name == team_name).first()
                 if team:
                     player.teams.append(team)
             
             db.add(player)
+            try:
+                db.flush()  # Try to flush changes without committing
+            except:
+                db.rollback()  # Rollback if there's an error
+                continue
         else:
             # Update existing player batting stats
-            player.matches = max(player.matches, int(player_info.get("Matches", 0)))
-            player.runs = int(player_info.get("Runs", 0))
-            player.balls_faced = int(player_info.get("BallsFaced", 0))
-            player.highest_score = int(player_info.get("HighestScore", 0))
-            player.fifties = int(player_info.get("50s", 0))
-            player.hundreds = int(player_info.get("100s", 0))
-            player.fours = int(player_info.get("4s", 0))
-            player.sixes = int(player_info.get("6s", 0))
-            player.batting_average = float(player_info.get("Average", 0.0))
-            player.strike_rate = float(player_info.get("StrikeRate", 0.0))
+            player.matches = max(player.matches, safe_int(player_info.get("Matches")))
+            player.runs = safe_int(player_info.get("TotalRuns"))
+            player.highest_score = safe_int(player_info.get("HighestScore"))
+            player.fifties = safe_int(player_info.get("FiftyPlusRuns"))
+            player.hundreds = safe_int(player_info.get("Centuries"))
+            player.fours = safe_int(player_info.get("Fours"))
+            player.sixes = safe_int(player_info.get("Sixes"))
+            player.batting_average = safe_float(player_info.get("BattingAverage"))
+            player.strike_rate = safe_float(player_info.get("StrikeRate"))
         
         players.append(player)
     
     # Process bowlers
     for player_info in bowlers_data.get("Bowlers", []):
-        player = db.query(models.Player).filter(models.Player.player_code == player_info["PlayerID"]).first()
+        player_code = clean_player_code(player_info.get("BowlerID"))
+        if not player_code or player_code in processed_codes:
+            continue
+            
+        processed_codes.add(player_code)
+        player = db.query(models.Player).filter(
+            models.Player.player_code == player_code
+        ).first()
         
         if not player:
-            # Create new player
             player = models.Player(
-                player_code=player_info["PlayerID"],
-                name=player_info["Name"],
-                country=player_info.get("Country", ""),
+                player_code=player_code,
+                name=player_info["BowlerName"],
                 role="Bowler",
-                image_url=player_info.get("PlayerImg", ""),
-                matches=int(player_info.get("Matches", 0)),
-                wickets=int(player_info.get("Wickets", 0)),
-                balls_bowled=int(player_info.get("Balls", 0)),
-                runs_conceded=int(player_info.get("Runs", 0)),
-                best_bowling_figures=player_info.get("BestFigures", ""),
-                economy_rate=float(player_info.get("Economy", 0.0)),
-                bowling_average=float(player_info.get("Average", 0.0)),
-                bowling_strike_rate=float(player_info.get("StrikeRate", 0.0))
+                matches=safe_int(player_info.get("Matches")),
+                wickets=safe_int(player_info.get("Wickets")),
+                best_bowling_figures=player_info.get("BBIW", ""),
+                economy_rate=safe_float(player_info.get("EconomyRate")),
+                bowling_average=safe_float(player_info.get("BowlingAverage")),
+                bowling_strike_rate=safe_float(player_info.get("BowlingSR"))
             )
             
             # Add player to team
-            team_code = player_info.get("TeamCode")
-            if team_code:
-                team = db.query(models.Team).filter(models.Team.team_code == team_code).first()
+            team_name = player_info.get("TeamName")
+            if team_name:
+                team = db.query(models.Team).filter(models.Team.name == team_name).first()
                 if team:
                     player.teams.append(team)
             
             db.add(player)
+            try:
+                db.flush()  # Try to flush changes without committing
+            except:
+                db.rollback()  # Rollback if there's an error
+                continue
         else:
             # Update existing player bowling stats
-            player.matches = max(player.matches, int(player_info.get("Matches", 0)))
-            player.wickets = int(player_info.get("Wickets", 0))
-            player.balls_bowled = int(player_info.get("Balls", 0))
-            player.runs_conceded = int(player_info.get("Runs", 0))
-            player.best_bowling_figures = player_info.get("BestFigures", "")
-            player.economy_rate = float(player_info.get("Economy", 0.0))
-            player.bowling_average = float(player_info.get("Average", 0.0))
-            player.bowling_strike_rate = float(player_info.get("StrikeRate", 0.0))
+            player.matches = max(player.matches, safe_int(player_info.get("Matches")))
+            player.wickets = safe_int(player_info.get("Wickets"))
+            player.best_bowling_figures = player_info.get("BBIW", "")
+            player.economy_rate = safe_float(player_info.get("EconomyRate"))
+            player.bowling_average = safe_float(player_info.get("BowlingAverage"))
+            player.bowling_strike_rate = safe_float(player_info.get("BowlingSR"))
             
-            # If they were previously marked as just a batsman, update to all-rounder
             if player.role == "Batsman":
                 player.role = "All-rounder"
         
         if player not in players:
             players.append(player)
     
-    db.commit()
+    try:
+        db.commit()
+    except:
+        db.rollback()
+        raise
+    
     return players
 
 async def process_match_data(db: Session) -> List[models.Match]:
@@ -192,113 +230,85 @@ async def process_match_data(db: Session) -> List[models.Match]:
     matches = []
     
     for match_info in match_data.get("Matches", []):
-        match_code = match_info["MatchID"]
+        # Ensure match_code is a string
+        match_code = clean_match_code(match_info["MatchID"])
         
         # Check if match already exists
         match = db.query(models.Match).filter(models.Match.match_code == match_code).first()
         
         if not match:
-            # Get team references
-            home_team = db.query(models.Team).filter(models.Team.team_code == match_info["HomeTeamCode"]).first()
-            away_team = db.query(models.Team).filter(models.Team.team_code == match_info["AwayTeamCode"]).first()
+            # Get team references by team names
+            home_team = db.query(models.Team).filter(models.Team.name == match_info["HomeTeamName"]).first()
+            away_team = db.query(models.Team).filter(models.Team.name == match_info["AwayTeamName"]).first()
             
             if not home_team or not away_team:
                 continue  # Skip if teams not found
             
-            # Parse match date
-            match_date = datetime.strptime(match_info["MatchDate"], "%Y-%m-%d %H:%M:%S")
+            # Parse match date and time
+            try:
+                match_datetime = datetime.strptime(f"{match_info['MatchDate']} {match_info['MatchTime']}", "%Y-%m-%d %H:%M")
+            except (ValueError, KeyError):
+                continue
             
-            # Create new match
+            # Create new match - Remove match_type field as it's not in the model
             match = models.Match(
                 match_code=match_code,
-                season=match_info.get("Season", "2025"),
-                date=match_date,
-                venue=match_info.get("Venue", ""),
-                city=match_info.get("City", ""),
+                season=match_info.get("CompetitionID", "203"),
+                date=match_datetime,
+                venue=match_info.get("GroundName", ""),
                 home_team_id=home_team.id,
                 away_team_id=away_team.id,
-                match_status=match_info.get("MatchStatus", "Scheduled")
+                match_status=match_info.get("MatchStatus", "Upcoming")
             )
-            
-            # Add match result if available
-            if match_info.get("WinningTeamCode"):
-                winner = db.query(models.Team).filter(models.Team.team_code == match_info["WinningTeamCode"]).first()
-                if winner:
-                    match.winner_id = winner.id
-                    match.win_margin = int(match_info.get("WinMargin", 0))
-                    match.win_type = match_info.get("WinType", "")
-            
-            # Add toss info if available
-            if match_info.get("TossWinnerCode"):
-                toss_winner = db.query(models.Team).filter(models.Team.team_code == match_info["TossWinnerCode"]).first()
-                if toss_winner:
-                    match.toss_winner_id = toss_winner.id
-                    match.toss_decision = match_info.get("TossDecision", "")
-            
-            # Add innings info if available
-            if match_info.get("FirstInningsScore"):
-                match.first_innings_score = int(match_info["FirstInningsScore"])
-                match.first_innings_wickets = int(match_info.get("FirstInningsWickets", 0))
-                match.first_innings_overs = float(match_info.get("FirstInningsOvers", 0.0))
-            
-            if match_info.get("SecondInningsScore"):
-                match.second_innings_score = int(match_info["SecondInningsScore"])
-                match.second_innings_wickets = int(match_info.get("SecondInningsWickets", 0))
-                match.second_innings_overs = float(match_info.get("SecondInningsOvers", 0.0))
-            
-            db.add(match)
-            
-            # Create innings records if match is completed
-            if match.match_status == "Completed":
-                # First innings
-                first_innings = models.Innings(
-                    match_id=match.id,
-                    innings_number=1,
-                    batting_team_id=home_team.id if match_info.get("FirstBattingTeamCode") == home_team.team_code else away_team.id,
-                    bowling_team_id=away_team.id if match_info.get("FirstBattingTeamCode") == home_team.team_code else home_team.id,
-                    total_runs=match.first_innings_score,
-                    total_wickets=match.first_innings_wickets,
-                    total_overs=match.first_innings_overs
-                )
-                db.add(first_innings)
+
+            try:
+                # Add match result if completed
+                if match_info.get("Comments") and "Won by" in match_info["Comments"]:
+                    winner_name = match_info["Comments"].split(" Won by")[0].strip()
+                    winner = db.query(models.Team).filter(models.Team.name == winner_name).first()
+                    
+                    if winner:
+                        match.winner_id = winner.id
+                        comment_parts = match_info["Comments"].split(" Won by ")[1].split(" ")
+                        match.win_margin = safe_int(comment_parts[0])
+                        match.win_type = "Runs" if "Runs" in comment_parts[1] else "Wickets"
                 
-                # Second innings
-                second_innings = models.Innings(
-                    match_id=match.id,
-                    innings_number=2,
-                    batting_team_id=away_team.id if match_info.get("FirstBattingTeamCode") == home_team.team_code else home_team.id,
-                    bowling_team_id=home_team.id if match_info.get("FirstBattingTeamCode") == home_team.team_code else away_team.id,
-                    total_runs=match.second_innings_score,
-                    total_wickets=match.second_innings_wickets,
-                    total_overs=match.second_innings_overs
-                )
-                db.add(second_innings)
-        else:
-            # Update existing match with latest info
-            match.match_status = match_info.get("MatchStatus", match.match_status)
-            
-            # Update match result if available and not already set
-            if match_info.get("WinningTeamCode") and not match.winner_id:
-                winner = db.query(models.Team).filter(models.Team.team_code == match_info["WinningTeamCode"]).first()
-                if winner:
-                    match.winner_id = winner.id
-                    match.win_margin = int(match_info.get("WinMargin", 0))
-                    match.win_type = match_info.get("WinType", "")
-            
-            # Update innings info if available
-            if match_info.get("FirstInningsScore"):
-                match.first_innings_score = int(match_info["FirstInningsScore"])
-                match.first_innings_wickets = int(match_info.get("FirstInningsWickets", 0))
-                match.first_innings_overs = float(match_info.get("FirstInningsOvers", 0.0))
-            
-            if match_info.get("SecondInningsScore"):
-                match.second_innings_score = int(match_info["SecondInningsScore"])
-                match.second_innings_wickets = int(match_info.get("SecondInningsWickets", 0))
-                match.second_innings_overs = float(match_info.get("SecondInningsOvers", 0.0))
-        
+                # Add innings info if available
+                if match_info.get("FirstBattingSummary"):
+                    first_innings = match_info["FirstBattingSummary"].split(" - ")
+                    if len(first_innings) == 2:
+                        score, overs = first_innings
+                        if "/" in score:
+                            runs, wickets = score.split("/")
+                            match.first_innings_score = safe_int(runs)
+                            match.first_innings_wickets = safe_int(wickets)
+                            match.first_innings_overs = safe_float(overs.replace(" Ovs", ""))
+                
+                if match_info.get("SecondBattingSummary"):
+                    second_innings = match_info["SecondBattingSummary"].split(" - ")
+                    if len(second_innings) == 2:
+                        score, overs = second_innings
+                        if "/" in score:
+                            runs, wickets = score.split("/")
+                            match.second_innings_score = safe_int(runs)
+                            match.second_innings_wickets = safe_int(wickets)
+                            match.second_innings_overs = safe_float(overs.replace(" Ovs", ""))
+                
+                db.add(match)
+                db.flush()
+            except Exception as e:
+                print(f"Error processing match {match_code}: {str(e)}")
+                db.rollback()
+                continue
+                
         matches.append(match)
     
-    db.commit()
+    try:
+        db.commit()
+    except:
+        db.rollback()
+        raise
+    
     return matches
 
 async def process_historical_data(db: Session) -> None:

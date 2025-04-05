@@ -9,48 +9,35 @@ from typing import Dict, Any, List, Optional
 
 from app.core.config import settings
 
-async def fetch_json_from_jsonp(url: str, callback_name: str) -> Dict[str, Any]:
-    """
-    Fetch JSONP data and convert it to JSON by removing the callback wrapper.
-    
-    Args:
-        url: URL to fetch data from
-        callback_name: Name of the JSONP callback function to remove
-        
-    Returns:
-        Parsed JSON data as a dictionary
-    """
+async def fetch_jsonp(url: str) -> Dict[Any, Any]:
+    """Fetch JSONP data and convert to JSON"""
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
-            if response.status != 200:
-                raise Exception(f"Failed to fetch data from {url}: {response.status}")
-
-            text = await response.text()
-
-            pattern = rf"{callback_name}\((.*)\)"
-            match = re.search(pattern, text, re.DOTALL)
-
-            if not match:
-                raise Exception(f"Failed to extract JSON from JSONP: {text[:100]}...")
-
-            json_str = match.group(1)
+            jsonp = await response.text()
+            
+            # Extract JSON data from JSONP response
+            json_str = re.search(r'\((.*)\)', jsonp).group(1)
             return json.loads(json_str)
 
-async def fetch_match_schedule() -> Dict[str, Any]:
+async def fetch_match_schedule() -> Dict[Any, Any]:
     """Fetch match schedule data"""
-    return await fetch_json_from_jsonp(settings.MATCH_SCHEDULE_URL, "MatchSchedule")
+    data = await fetch_jsonp(settings.MATCH_SCHEDULE_URL)
+    return {"Matches": data.get("Matchsummary", [])}
 
-async def fetch_team_standings() -> Dict[str, Any]:
+async def fetch_team_standings() -> Dict[Any, Any]:
     """Fetch team standings data"""
-    return await fetch_json_from_jsonp(settings.TEAM_STANDINGS_URL, "ongroupstandings")
+    data = await fetch_jsonp(settings.TEAM_STANDINGS_URL)
+    return {"Teams": data.get("points", [])}
 
-async def fetch_top_run_scorers() -> Dict[str, Any]:
+async def fetch_top_run_scorers() -> Dict[Any, Any]:
     """Fetch top run scorers data"""
-    return await fetch_json_from_jsonp(settings.TOP_SCORERS_URL, "ontoprunsscorers")
+    data = await fetch_jsonp(settings.TOP_SCORERS_URL)
+    return {"Batsmen": data.get("toprunsscorers", [])}
 
-async def fetch_most_wickets() -> Dict[str, Any]:
+async def fetch_most_wickets() -> Dict[Any, Any]:
     """Fetch most wickets data"""
-    return await fetch_json_from_jsonp(settings.MOST_WICKETS_URL, "onmostwickets")
+    data = await fetch_jsonp(settings.MOST_WICKETS_URL)
+    return {"Bowlers": data.get("mostwickets", [])}
 
 async def download_cricsheet_data(output_dir: str = "data/cricsheet") -> List[Dict[str, Any]]:
     """
