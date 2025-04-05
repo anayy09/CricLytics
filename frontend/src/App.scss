@@ -1,8 +1,5 @@
-// Variables
-$primary-color: #4CAF50;  // Cricket green
-$secondary-color: #FFD700;  // Accent yellow
-$text-color: #333;
-$background-color: #f9f9f9;
+// Import variables
+@import './styles/variables';
 
 // Fonts
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
