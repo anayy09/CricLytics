@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.endpoints import data
+from app.api.endpoints import data, teams, players, matches, predictions
 from app.core.config import settings
 
 app = FastAPI(
@@ -21,6 +21,10 @@ app.add_middleware(
 
 # Include routers
 app.include_router(data.router, prefix=f"{settings.API_PREFIX}/data", tags=["Data Management"])
+app.include_router(teams.router, prefix=f"{settings.API_PREFIX}/teams", tags=["Teams"])
+app.include_router(players.router, prefix=f"{settings.API_PREFIX}/players", tags=["Players"])
+app.include_router(matches.router, prefix=f"{settings.API_PREFIX}/matches", tags=["Matches"])
+app.include_router(predictions.router, prefix=f"{settings.API_PREFIX}/predictions", tags=["Predictions"])
 
 @app.get("/")
 async def root():
