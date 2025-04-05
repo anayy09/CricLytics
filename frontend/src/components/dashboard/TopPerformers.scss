@@ -1,0 +1,109 @@
+.top-performers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+    
+    &__card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    &__list {
+      flex: 1;
+      overflow-y: auto;
+    }
+    
+    &__table {
+      width: 100%;
+      border-collapse: collapse;
+      
+      th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #edf2f7;
+      }
+      
+      th {
+        font-weight: 600;
+        color: #4a5568;
+        font-size: 0.9rem;
+      }
+      
+      tr:last-child td {
+        border-bottom: none;
+      }
+    }
+    
+    &__player {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      
+      &:hover {
+        .top-performers__player-name {
+          color: $primary-color;
+        }
+      }
+    }
+    
+    &__player-img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 0.75rem;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    
+    &__player-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    &__player-name {
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    
+    &__player-team {
+      font-size: 0.8rem;
+      color: #718096;
+    }
+    
+    &__stat {
+      font-size: 0.9rem;
+      
+      &--primary {
+        font-weight: 700;
+        font-size: 1rem;
+      }
+    }
+    
+    &__footer {
+      padding-top: 1rem;
+      border-top: 1px solid #edf2f7;
+      text-align: center;
+    }
+    
+    &__view-all {
+      color: $primary-color;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }

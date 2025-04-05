@@ -1,0 +1,92 @@
+.points-table {
+    &__container {
+      overflow-x: auto;
+    }
+    
+    &__table {
+      width: 100%;
+      border-collapse: collapse;
+      
+      th, td {
+        padding: 0.75rem;
+        text-align: center;
+        border-bottom: 1px solid #edf2f7;
+      }
+      
+      th {
+        background-color: #f8fafc;
+        font-weight: 600;
+        color: #4a5568;
+        font-size: 0.9rem;
+      }
+      
+      tr:last-child td {
+        border-bottom: none;
+      }
+    }
+    
+    &__team-col {
+      text-align: left;
+      min-width: 150px;
+    }
+    
+    &__team-link {
+      text-decoration: none;
+      color: inherit;
+      
+      &:hover {
+        color: $primary-color;
+      }
+    }
+    
+    &__team {
+      display: flex;
+      align-items: center;
+    }
+    
+    &__team-logo {
+      width: 30px;
+      height: 30px;
+      margin-right: 0.75rem;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+    
+    &__points {
+      font-weight: 700;
+    }
+    
+    &__playoff-position {
+      background-color: rgba($primary-color, 0.05);
+      
+      td {
+        border-bottom-color: rgba($primary-color, 0.1);
+      }
+    }
+    
+    &__legend {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: flex-end;
+      font-size: 0.85rem;
+    }
+    
+    &__legend-item {
+      display: flex;
+      align-items: center;
+      margin-left: 1rem;
+    }
+    
+    &__legend-color {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-right: 0.5rem;
+      background-color: rgba($primary-color, 0.05);
+      border: 1px solid rgba($primary-color, 0.1);
+    }
+  }

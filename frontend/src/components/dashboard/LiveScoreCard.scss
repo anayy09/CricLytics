@@ -1,0 +1,113 @@
+.live-score-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    &__link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+    
+    &__venue {
+      color: #666;
+    }
+    
+    &__status {
+      font-weight: 600;
+      
+      &.live {
+        color: #e53e3e;
+      }
+      
+      &.completed {
+        color: #2b6cb0;
+      }
+      
+      &.scheduled {
+        color: #718096;
+      }
+    }
+    
+    &__teams {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    
+    &__team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 45%;
+    }
+    
+    &__team-logo {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 0.5rem;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+    
+    &__team-name {
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    &__team-score {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    
+    &__vs {
+      font-size: 0.9rem;
+      color: #718096;
+      font-weight: 600;
+    }
+    
+    &__current-play {
+      border-top: 1px solid #edf2f7;
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+    
+    &__batsmen {
+      margin-bottom: 0.5rem;
+    }
+    
+    &__batsman, &__bowler-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.25rem;
+      
+      .name {
+        font-weight: 600;
+      }
+      
+      .score, .figures {
+        color: #4a5568;
+      }
+    }
+    
+    &__bowler {
+      border-top: 1px dashed #edf2f7;
+      padding-top: 0.5rem;
+    }
+  }

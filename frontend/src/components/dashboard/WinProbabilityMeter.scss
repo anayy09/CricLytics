@@ -1,0 +1,34 @@
+.win-probability-meter {
+    &__teams {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    
+    &__team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    &__team-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    &__team-prob {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    
+    &__chart {
+      margin-bottom: 1rem;
+    }
+    
+    &__message {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #718096;
+      margin: 0;
+    }
+  }
