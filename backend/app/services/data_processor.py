@@ -2,7 +2,7 @@ from typing import Dict, Any, List, Optional
 from sqlalchemy.orm import Session
 import pandas as pd
 import numpy as np
-from datetime import datetime
+from datetime import datetime, time, date
 
 from app.db import models
 from app.utils.data_fetcher import (
@@ -316,10 +316,11 @@ async def process_historical_data(db: Session) -> None:
         # This is a simplified version - in a real implementation, you'd need to map
         # the Cricsheet data format to your database models
         
-        info = match.get("info", {})
-        
-        # Check if match already exists
-        match_date = datetime.strptime(info.get("dates", [""])[0], "%Y-%m-%d")
+        info = match.get("info", {})   
+
+        raw_date = info.get("dates", [""])[0]
+        match_date = datetime.combine(raw_date, time.min) if isinstance(raw_date, date) else datetime.strptime(raw_date, "%Y-%m-%d")
+
         teams = info.get("teams", [])
         
         if len(teams) != 2:

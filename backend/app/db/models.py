@@ -51,13 +51,26 @@ class Player(Base):
     bowling_style = Column(String)
     role = Column(String)  # Batsman, Bowler, All-rounder, Wicket-keeper
     image_url = Column(String)
-    
-    # Relationships
+
     teams = relationship("Team", secondary=player_team_association, back_populates="players")
-    batting_performances = relationship("BattingPerformance", back_populates="player")
-    bowling_performances = relationship("BowlingPerformance", back_populates="player")
-    
-    # Career stats
+
+    batting_performances = relationship(
+        "BattingPerformance",
+        back_populates="player",
+        foreign_keys="[BattingPerformance.player_id]",
+    )
+
+    bowling_performances = relationship(
+        "BowlingPerformance",
+        back_populates="player",
+        foreign_keys="[BowlingPerformance.player_id]",
+    )
+
+    # Optional reverse relationships (populated via backref)
+    # dismissals_as_bowler
+    # dismissals_as_fielder
+
+    # Career stats...
     matches = Column(Integer, default=0)
     
     # Batting stats
@@ -151,23 +164,40 @@ class BattingPerformance(Base):
     id = Column(Integer, primary_key=True, index=True)
     innings_id = Column(Integer, ForeignKey("innings.id"))
     player_id = Column(Integer, ForeignKey("players.id"))
-    
+
     runs = Column(Integer, default=0)
     balls_faced = Column(Integer, default=0)
     fours = Column(Integer, default=0)
     sixes = Column(Integer, default=0)
     strike_rate = Column(Float, default=0.0)
-    
-    dismissal_type = Column(String, nullable=True)  # Bowled, Caught, LBW, etc.
+
+    dismissal_type = Column(String, nullable=True)
     dismissal_bowler_id = Column(Integer, ForeignKey("players.id"), nullable=True)
     dismissal_fielder_id = Column(Integer, ForeignKey("players.id"), nullable=True)
-    
+
     batting_position = Column(Integer)
-    
+
     # Relationships
     innings = relationship("Innings", back_populates="batting_performances")
-    player = relationship("Player", back_populates="batting_performances")
-    
+
+    player = relationship(
+        "Player",
+        back_populates="batting_performances",
+        foreign_keys=[player_id],
+    )
+
+    dismissal_bowler = relationship(
+        "Player",
+        foreign_keys=[dismissal_bowler_id],
+        backref="dismissals_as_bowler",
+    )
+
+    dismissal_fielder = relationship(
+        "Player",
+        foreign_keys=[dismissal_fielder_id],
+        backref="dismissals_as_fielder",
+    )
+
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 

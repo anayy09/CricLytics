@@ -1,8 +1,8 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # Database settings
-    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/ipl2025"
+    DATABASE_URL: str = "postgresql://postgres:Arpan%4001@localhost:5432/ipl2025"
     REDIS_URL: str = "redis://localhost:6379/0"
     
     # API settings
