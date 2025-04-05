@@ -1,0 +1,76 @@
+.season-simulator {
+    &__info {
+      margin-bottom: 1.5rem;
+      
+      p {
+        color: #718096;
+        font-size: 0.95rem;
+      }
+    }
+    
+    &__chart {
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 2rem;
+    }
+    
+    &__table-container {
+      overflow-x: auto;
+    }
+    
+    &__table {
+      width: 100%;
+      border-collapse: collapse;
+      
+      th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #edf2f7;
+      }
+      
+      th {
+        background-color: #f8fafc;
+        font-weight: 600;
+        color: #4a5568;
+        font-size: 0.9rem;
+      }
+      
+      tr:last-child td {
+        border-bottom: none;
+      }
+    }
+    
+    &__team-name {
+      font-weight: 600;
+    }
+    
+    &__percentage {
+      width: 180px;
+    }
+    
+    &__percentage-bar {
+      height: 8px;
+      background-color: #edf2f7;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.25rem;
+    }
+    
+    &__percentage-fill {
+      height: 100%;
+      border-radius: 4px;
+      
+      &--playoff {
+        background-color: #4299e1;
+      }
+      
+      &--championship {
+        background-color: #4CAF50;
+      }
+    }
+    
+    &__percentage-value {
+      font-size: 0.9rem;
+      color: #4a5568;
+    }
+  }

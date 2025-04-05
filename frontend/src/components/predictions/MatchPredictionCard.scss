@@ -1,0 +1,215 @@
+@import '../../styles/variables';
+
+.match-prediction-card {
+    &__match-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #edf2f7;
+      
+      @media (max-width: 576px) {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+    
+    &__venue, &__date {
+      font-size: 0.95rem;
+      color: #718096;
+    }
+    
+    &__teams {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      
+      @media (max-width: 576px) {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+    }
+    
+    &__team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 45%;
+      
+      @media (max-width: 576px) {
+        width: 100%;
+      }
+    }
+    
+    &__team-name {
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    
+    &__team-probability {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    &__probability-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+    
+    &__probability-label {
+      font-size: 0.9rem;
+      color: #718096;
+    }
+    
+    &__vs {
+      width: 10%;
+      text-align: center;
+      font-size: 1.2rem;
+      color: #718096;
+      font-weight: 600;
+      
+      @media (max-width: 576px) {
+        width: auto;
+      }
+    }
+    
+    &__probability-bar {
+      height: 12px;
+      display: flex;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    
+    &__probability-fill {
+      height: 100%;
+      
+      &--home {
+        background-color: #4CAF50;
+      }
+      
+      &--away {
+        background-color: #F44336;
+      }
+    }
+    
+    &__factors {
+      margin-bottom: 2rem;
+    }
+    
+    &__factors-title, &__key-players-title {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #edf2f7;
+    }
+    
+    &__factor {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px dashed #edf2f7;
+      
+      &:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+      
+      @media (max-width: 576px) {
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+    }
+    
+    &__factor-label {
+      font-weight: 600;
+      color: #4a5568;
+    }
+    
+    &__factor-value {
+      color: #718096;
+    }
+    
+    &__factor-detail {
+      font-size: 0.9rem;
+      margin-left: 0.5rem;
+      color: #a0aec0;
+    }
+    
+    &__key-players-container {
+      display: flex;
+      gap: 2rem;
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+      }
+    }
+    
+    &__key-player {
+      flex: 1;
+      background-color: #f8fafc;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    
+    &__key-player-team {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #edf2f7;
+    }
+    
+    &__key-player-item {
+      margin-bottom: 0.75rem;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    
+    &__key-player-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      
+      a {
+        color: $primary-color;
+        text-decoration: none;
+        
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+    
+    &__key-player-stats {
+      font-size: 0.9rem;
+      color: #718096;
+    }
+    
+    &__footer {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #edf2f7;
+      text-align: center;
+    }
+    
+    &__link {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: $primary-color;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 600;
+      transition: background-color 0.2s;
+      
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+    }
+  }

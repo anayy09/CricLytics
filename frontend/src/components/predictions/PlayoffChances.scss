@@ -1,0 +1,146 @@
+@import '../../styles/variables';
+
+.playoff-chances {
+    &__cutoff {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #edf2f7;
+    }
+    
+    &__cutoff-label {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    
+    &__cutoff-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: $primary-color;
+    }
+    
+    &__table-container {
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+    }
+    
+    &__table {
+      width: 100%;
+      border-collapse: collapse;
+      
+      th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #edf2f7;
+      }
+      
+      th {
+        background-color: #f8fafc;
+        font-weight: 600;
+        color: #4a5568;
+        font-size: 0.9rem;
+      }
+      
+      tr:last-child td {
+        border-bottom: none;
+      }
+    }
+    
+    &__team {
+      &--qualified {
+        background-color: rgba(56, 161, 105, 0.05);
+      }
+      
+      &--eliminated {
+        background-color: rgba(229, 62, 62, 0.05);
+      }
+    }
+    
+    &__team-name {
+      font-weight: 600;
+    }
+    
+    &__percentage {
+      width: 180px;
+    }
+    
+    &__percentage-bar {
+      height: 8px;
+      background-color: #edf2f7;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.25rem;
+    }
+    
+    &__percentage-fill {
+      height: 100%;
+      background-color: $primary-color;
+      border-radius: 4px;
+    }
+    
+    &__percentage-value {
+      font-size: 0.9rem;
+      color: #4a5568;
+    }
+    
+    &__status {
+      text-align: center;
+    }
+    
+    &__status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      
+      &--qualified {
+        background-color: #38a169;
+        color: white;
+      }
+      
+      &--contention {
+        background-color: #ecc94b;
+        color: #744210;
+      }
+      
+      &--eliminated {
+        background-color: #e53e3e;
+        color: white;
+      }
+    }
+    
+    &__legend {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+    }
+    
+    &__legend-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    &__legend-color {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-right: 0.5rem;
+      border-radius: 2px;
+      
+      &--qualified {
+        background-color: rgba(56, 161, 105, 0.2);
+        border: 1px solid #38a169;
+      }
+      
+      &--contention {
+        background-color: white;
+        border: 1px solid #edf2f7;
+      }
+      
+      &--eliminated {
+        background-color: rgba(229, 62, 62, 0.2);
+        border: 1px solid #e53e3e;
+      }
+    }
+  }

@@ -2,17 +2,15 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
-import DashboardPage from './components/dashboard/DashboardPage';
-import TeamsPage from './components/teams/TeamsPage';
-import TeamDetailPage from './components/teams/TeamDetailPage';
-import PlayersPage from './components/players/PlayersPage';
-import PlayerDetailPage from './components/players/PlayerDetailPage';
+import DashboardPage from './pages/dashboard/DashboardPage';
+import TeamsPage from './pages/teams/TeamsPage';
+import TeamDetailPage from './pages/teams/TeamDetailPage';
+import PlayersPage from './pages/players/PlayersPage';
+import PlayerDetailPage from './pages/players/PlayerDetailPage';
+import MatchesPage from './pages/matches/MatchesPage';
+import MatchDetailPage from './pages/matches/MatchDetailPage';
+import PredictionsPage from './pages/predictions/PredictionsPage';
 import './App.scss';
-
-// Placeholder components (we'll create these in future parts)
-const MatchesPage = () => <div>Matches Page</div>;
-const MatchDetailPage = () => <div>Match Detail Page</div>;
-const PredictionsPage = () => <div>Predictions Page</div>;
 
 function App() {
   return (

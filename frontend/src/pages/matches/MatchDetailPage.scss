@@ -1,0 +1,185 @@
+@import '../../styles/variables';
+
+.match-detail-page {
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background-color: #f8fafc;
+      border-radius: 8px 8px 0 0;
+      border: 1px solid #edf2f7;
+    }
+    
+    &__venue {
+      font-size: 1rem;
+      color: #4a5568;
+    }
+    
+    &__status {
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      
+      &--live {
+        background-color: #e53e3e;
+        color: white;
+      }
+      
+      &--completed {
+        background-color: #4a5568;
+        color: white;
+      }
+      
+      &--scheduled {
+        background-color: #edf2f7;
+        color: #4a5568;
+      }
+    }
+    
+    &__teams {
+      display: flex;
+      align-items: center;
+      padding: 2rem;
+      background-color: white;
+      border-left: 1px solid #edf2f7;
+      border-right: 1px solid #edf2f7;
+      
+      @media (max-width: 576px) {
+        flex-direction: column;
+        gap: 2rem;
+      }
+    }
+    
+    &__team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 45%;
+      
+      @media (max-width: 576px) {
+        width: 100%;
+      }
+    }
+    
+    &__team-logo {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 1rem;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+    
+    &__team-name {
+      font-weight: 600;
+      font-size: 1.2rem;
+      text-align: center;
+      margin-bottom: 0.75rem;
+    }
+    
+    &__team-score {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    &__vs {
+      width: 10%;
+      text-align: center;
+      font-size: 1.2rem;
+      color: #718096;
+      font-weight: 600;
+      
+      @media (max-width: 576px) {
+        width: auto;
+      }
+    }
+    
+    &__result, &__time {
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background-color: white;
+      border: 1px solid #edf2f7;
+      border-top: none;
+    }
+    
+    &__result {
+      color: #4a5568;
+    }
+    
+    &__time {
+      color: #718096;
+    }
+    
+    &__win-probability {
+      margin: 2rem 0;
+    }
+    
+    &__content {
+      margin-top: 2rem;
+    }
+    
+    &__tabs {
+      display: flex;
+      border-bottom: 1px solid #edf2f7;
+      margin-bottom: 1.5rem;
+    }
+    
+    &__tab {
+      padding: 1rem 2rem;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #718096;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      border-bottom: 2px solid transparent;
+      
+      &:hover {
+        color: $primary-color;
+      }
+      
+      &--active {
+        color: $primary-color;
+        border-bottom-color: $primary-color;
+      }
+    }
+    
+    &__tab-content {
+      min-height: 300px;
+    }
+    
+    &__info {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    &__info-item {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    &__info-label {
+      font-size: 0.9rem;
+      color: #718096;
+      margin-bottom: 0.5rem;
+    }
+    
+    &__info-value {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+  }

@@ -1,0 +1,96 @@
+.score-card {
+    margin-bottom: 2rem;
+    
+    &__summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #edf2f7;
+      
+      @media (max-width: 576px) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    
+    &__total {
+      display: flex;
+      align-items: baseline;
+    }
+    
+    &__score {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-right: 0.5rem;
+    }
+    
+    &__overs {
+      font-size: 1rem;
+      color: #718096;
+    }
+    
+    &__extras {
+      font-size: 0.9rem;
+      color: #718096;
+      
+      @media (max-width: 576px) {
+        margin-top: 0.5rem;
+      }
+    }
+    
+    &__section-title {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    
+    &__batting {
+      margin-bottom: 2rem;
+    }
+    
+    &__table-container {
+      overflow-x: auto;
+    }
+    
+    &__table {
+      width: 100%;
+      border-collapse: collapse;
+      
+      th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #edf2f7;
+      }
+      
+      th {
+        background-color: #f8fafc;
+        font-weight: 600;
+        color: #4a5568;
+        font-size: 0.9rem;
+      }
+      
+      tr:last-child td {
+        border-bottom: none;
+      }
+    }
+    
+    &__player-name {
+      font-weight: 600;
+    }
+    
+    &__dismissal {
+      font-size: 0.9rem;
+      color: #718096;
+      max-width: 150px;
+    }
+    
+    &__runs {
+      font-weight: 700;
+    }
+    
+    &__wickets {
+      font-weight: 700;
+      color: #e53e3e;
+    }
+  }

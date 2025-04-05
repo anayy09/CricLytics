@@ -1,0 +1,119 @@
+@import '../../styles/variables';
+
+.predictions-page {
+    &__title {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    &__section {
+      margin-bottom: 3rem;
+    }
+    
+    &__section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      padding-left: 1rem;
+      
+      &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.25rem;
+        bottom: 0.25rem;
+        width: 4px;
+        background-color: $primary-color;
+        border-radius: 2px;
+      }
+    }
+    
+    &__simulator-controls {
+      margin-bottom: 1.5rem;
+    }
+    
+    &__simulator-info {
+      margin-bottom: 1.5rem;
+      
+      p {
+        color: #718096;
+        font-size: 0.95rem;
+      }
+    }
+    
+    &__simulator-actions {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      
+      @media (max-width: 576px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+    }
+    
+    &__simulator-select {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      
+      label {
+        font-weight: 600;
+        color: #4a5568;
+      }
+      
+      select {
+        padding: 0.5rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        font-size: 1rem;
+        
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+        }
+      }
+    }
+    
+    &__simulator-button {
+      padding: 0.75rem 1.5rem;
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+      
+      &:disabled {
+        background-color: #a0aec0;
+        cursor: not-allowed;
+      }
+    }
+    
+    &__match-predictions {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+      
+      @media (max-width: 576px) {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    &__no-matches {
+      text-align: center;
+      padding: 3rem;
+      
+      p {
+        color: #718096;
+        font-size: 1.1rem;
+      }
+    }
+  }
